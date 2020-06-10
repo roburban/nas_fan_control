@@ -21,19 +21,27 @@ I added dependencies on two Perl packages:
 * IPC::RUN
 * Proc::Daemon
 
-Which means these Perl packages must be installed directly on the FreeNAS OS (if you are running the script there), which is not supported. This requires changing the repo control files in /usr/local/etc/pkg/repos/. If this bothers you, it is possible to accomplish these tasks (daemonizing, running external processes) without these dependencies. Please submit a request and I may find the time to remove the dependencies.
+Which means these Perl packages must be installed directly on the FreeNAS OS (if you are running the script there), which is not supported. This requires changing the repo control files in `/usr/local/etc/pkg/repos/`. If this bothers you, it is possible to accomplish these tasks (daemonizing, running external processes) without these dependencies. Please submit a request and I may find the time to remove the dependencies.
 
 If $script_mode is set to "asrock", then the "zones" are defined by @asrock_zones, and ipmi command to set the duty-cycle is:
+```
 ipmitool raw 0x3a 0x01 <FAN1-duty-cycle> .. <FAN6-duty-cycle> <filler> <filler>
+```
+for example, to set all six fans to 50% duty-cycle:
+```
+ipmitool raw 0x3a 0x01 0x32 0x32 0x32 0x32 0x32 0x32 0x0 0x0
+```
 
 @asrock_zones is a data-structure with the following format:
+```
 my @asrock_zones = (
 	{ <FAN-NAME> => { <FAN-ENTRY> }, [<FAN-NAME> => { <FAN-ENTRY> } }, # zone-0
 	{ <FAN-NAME> => { <FAN-ENTRY> }, [<FAN-NAME> => { <FAN-ENTRY> } }, # zone-1
 );
+```
 where:
-	<FAN-NAME> is arbitrary. I used "FAN1" .. "FAN6"
-	<FAN-ENTRY> is a hashref with two keys, "index" and optionally "factor"
+	`<FAN-NAME>` is arbitrary. I used "FAN1" .. "FAN6"
+	`<FAN-ENTRY>` is a hashref with two keys, "index" and optionally "factor"
 		index points to the fan position in the ipmitool command
 		factor is a floating value that modifies the duty-cycle value of the
 			PID controller (will be limited to 100%)
