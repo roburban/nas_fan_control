@@ -35,16 +35,15 @@ ipmitool raw 0x3a 0x01 0x32 0x32 0x32 0x32 0x32 0x32 0x0 0x0
 @asrock_zones is a data-structure with the following format:
 ```
 my @asrock_zones = (
-	{ <FAN-NAME> => { <FAN-ENTRY> }, [<FAN-NAME> => { <FAN-ENTRY> } }, # zone-0
-	{ <FAN-NAME> => { <FAN-ENTRY> }, [<FAN-NAME> => { <FAN-ENTRY> } }, # zone-1
+	{ <FAN-NAME> => { <FAN-ENTRY> }, ..., [<FAN-NAME> => { <FAN-ENTRY> } }, # zone-0
+	{ <FAN-NAME> => { <FAN-ENTRY> }, ..., [<FAN-NAME> => { <FAN-ENTRY> } }, # zone-1
 );
 ```
 where:
-	`<FAN-NAME>` is arbitrary. I used "FAN1" .. "FAN6"
-	`<FAN-ENTRY>` is a hashref with two keys, "index" and optionally "factor"
-		index points to the fan position in the ipmitool command
-		factor is a floating value that modifies the duty-cycle value of the
-			PID controller (will be limited to 100%)
+* `<FAN-NAME>` is arbitrary. I used "FAN1" .. "FAN6"
+* `<FAN-ENTRY>` is a hashref with two keys, "index" and optionally "factor"
+	*	index points to the fan position in the ipmitool command
+	*	factor is a floating value that modifies the duty-cycle value of the PID controller (will be limited to 100%)
 
 This data-structure should ideally find its way into a config file.
 
